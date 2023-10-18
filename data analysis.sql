@@ -68,7 +68,7 @@ ORDER BY 4 DESC;
 CREATE COUNTRY_REST
 AS(
 SELECT [CountryName], COUNT(CAST([RestaurantID]AS NUMERIC)) REST_COUNT
-FROM [dbo].[Zomato_Dataset$]
+FROM Zomato_Dataset$
 GROUP BY [CountryName]
 )
 SELECT * FROM COUNTRY_REST
@@ -76,7 +76,7 @@ ORDER BY 2 DESC
 
 SELECT A.[COUNTRY_NAME],COUNT(A.[RestaurantID]) TOTAL_REST, 
 ROUND(COUNT(CAST(A.[RestaurantID] AS DECIMAL))/CAST(B.[REST_COUNT] AS DECIMAL)*100, 2)
-FROM [dbo].[ZomatoData1] A JOIN COUNTRY_REST B
+FROM Zomato_Dataset$ A JOIN COUNTRY_REST B
 ON A.[COUNTRY_NAME] = B.[COUNTRY_NAME]
 WHERE A.[Has_Online_delivery] = 'YES'
 GROUP BY A.[COUNTRY_NAME],B.REST_COUNT
@@ -86,12 +86,12 @@ ORDER BY 2 DESC
 
 -- how rating affects in max listed restuarants with and without table booking option ( Connaught Place)
 SELECT 'WITH_TABLE' TABLE_BOOKING_OPT,COUNT([Has_Table_booking]) TOTAL_REST, ROUND(AVG([Rating]),2) AVG_RATING
-FROM [dbo].[ZomatoData1]
+FROM Zomato_Dataset$
 WHERE [Has_Table_booking] = 'YES'
 AND [Locality] = 'Connaught Place'
 UNION
 SELECT 'WITHOUT_TABLE' TABLE_BOOKING_OPT,COUNT([Has_Table_booking]) TOTAL_REST, ROUND(AVG([Rating]),2) AVG_RATING
-FROM [dbo].[ZomatoData1]
+FROM Zomato_Dataset$
 WHERE [Has_Table_booking] = 'NO'
 AND [Locality] = 'Connaught Place'
 
