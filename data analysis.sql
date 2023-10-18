@@ -1,4 +1,4 @@
-select * from Zomato_Dataset$;
+SELECT * FROM Zomato_Dataset$;
 
 -- count and percentage of restuarant per country 
 WITH RestaurantCounts AS (
@@ -19,13 +19,13 @@ order by 2;
 
 
 -- city(with locality) of india with max number of resturants
-select city,Locality,count(RestaurantID) AS RestaurantCount from Zomato_Dataset$
+SELECT city,Locality ,COUNT(RestaurantID) AS RestaurantCount FROM Zomato_Dataset$
 group by City,Locality
 Order by 3 DESC;
 
 
 -- locality in india with minimum and maximum resturants
-WITH RestaurantCounts AS (
+WITH RestaurantCounts AS(
     SELECT Locality, COUNT(*) AS RestaurantCount
     FROM Zomato_Dataset$
     WHERE CountryName = 'india'
@@ -61,6 +61,27 @@ COUNT(RestaurantID) TOTAL_REST ,ROUND(AVG(CAST(Rating AS DECIMAL)),2) AVG_RATING
 FROM Zomato_Dataset$
 GROUP BY CountryName,City,Locality
 ORDER BY 4 DESC;
+
+
+
+--which country how many restuarants have online delivery option with percentage  
+CREATE COUNTRY_REST
+AS(
+SELECT [CountryName], COUNT(CAST([RestaurantID]AS NUMERIC)) REST_COUNT
+FROM [dbo].[Zomato_Dataset$]
+GROUP BY [CountryName]
+)
+SELECT * FROM COUNTRY_REST
+ORDER BY 2 DESC
+
+SELECT A.[COUNTRY_NAME],COUNT(A.[RestaurantID]) TOTAL_REST, 
+ROUND(COUNT(CAST(A.[RestaurantID] AS DECIMAL))/CAST(B.[REST_COUNT] AS DECIMAL)*100, 2)
+FROM [dbo].[ZomatoData1] A JOIN COUNTRY_REST B
+ON A.[COUNTRY_NAME] = B.[COUNTRY_NAME]
+WHERE A.[Has_Online_delivery] = 'YES'
+GROUP BY A.[COUNTRY_NAME],B.REST_COUNT
+ORDER BY 2 DESC
+
 
 
 --restuarants offer table booking option in india where the max restaurants are listed in Zomato
