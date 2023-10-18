@@ -84,6 +84,19 @@ ORDER BY 2 DESC
 
 
 
+-- how rating affects in max listed restuarants with and without table booking option ( Connaught Place)
+SELECT 'WITH_TABLE' TABLE_BOOKING_OPT,COUNT([Has_Table_booking]) TOTAL_REST, ROUND(AVG([Rating]),2) AVG_RATING
+FROM [dbo].[ZomatoData1]
+WHERE [Has_Table_booking] = 'YES'
+AND [Locality] = 'Connaught Place'
+UNION
+SELECT 'WITHOUT_TABLE' TABLE_BOOKING_OPT,COUNT([Has_Table_booking]) TOTAL_REST, ROUND(AVG([Rating]),2) AVG_RATING
+FROM [dbo].[ZomatoData1]
+WHERE [Has_Table_booking] = 'NO'
+AND [Locality] = 'Connaught Place'
+
+    
+
 --restuarants offer table booking option in india where the max restaurants are listed in Zomato
 WITH CT1 AS (
 SELECT City,Locality COUNT(RestaurantID) REST_COUNT
